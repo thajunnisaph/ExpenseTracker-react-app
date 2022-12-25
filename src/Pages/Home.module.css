@@ -3,5 +3,18 @@
     width: 70%;
     margin-top: 20%;
     text-align: center;
-    font-size: larger;
+    
 }
+h3 {
+    padding:10px;
+}
+.home button{
+    background-color: transparent;
+    color: #9f5ccc;
+    border: none;
+    cursor: pointer;
+   }
+   .home button:hover{
+    background-color: transparent;
+    color: #ae82cc;
+   }
