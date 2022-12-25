@@ -18,3 +18,16 @@ h3 {
     background-color: transparent;
     color: #ae82cc;
    }
+   .verify button {
+    background-color: transparent;
+    color: #9f5ccc;
+    border: none;
+    cursor: pointer;
+    font-size:medium;
+
+   }
+   .verify{
+    margin-top: 20px;
+    text-align: right;
+    margin-right: 30px;
+   }
