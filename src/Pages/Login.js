@@ -1,10 +1,12 @@
 import React,{useState,useRef}from 'react';
 import classes from './Login.module.css';
 import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 
 function Login() {
    const [isLogin,setIsLogin] =  useState(false);
    const [isLoading,setIsLoading] = useState(false);
+   const history = useHistory();
    const emailref = useRef();
    const pswdref = useRef();
    const cnfmpswd = useRef();
@@ -35,8 +37,12 @@ function Login() {
         returnSecureToken:true
     }).then((res) =>{
         setIsLoading(false);
-        console.log(res.data.idToken);
+        if(res.status === 200){
+        const token = res.data.idToken;
+        localStorage.setItem('token',token);
+        history.push('/home');
         console.log('User has Succesfully Login');
+      console.log(res);}
     }).catch((err) => {
          setIsLoading(false);
         alert(err.response.data.error.message);})
@@ -56,7 +62,9 @@ function Login() {
         <div className={classes.actions} >
        {!isLoading  && <button>{isLogin? 'Login':'Sign UP'}</button>}
        {isLoading && <p> Sending Request...</p>}
+       {isLogin && <button className={classes.toggle} >Forgot Password</button>}
         <button className={classes.toggle} onClick={switchLoginHandler}>{isLogin? 'Dont have an account?SignUp' : 'Already have an account?Login'}</button>
+      
         </div>
     </form>
     </div>
