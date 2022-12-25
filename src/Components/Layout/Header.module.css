@@ -4,3 +4,16 @@
    padding :0 5%
 
 }
+.logout button{
+   margin: auto;
+    border-radius: 5px;
+    padding: 5px;
+    color: white;
+    background-color:blueviolet;
+    cursor: pointer;
+    
+  
+}
+.logout{
+   text-align: left;
+}
