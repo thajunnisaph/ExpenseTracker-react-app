@@ -13,6 +13,9 @@ function Login() {
    const switchLoginHandler = () =>{
     setIsLogin((prevState) => !prevState);
    }
+   const forgotpswdHandler = () =>{
+    history.push('/forgot');
+   }
    const submitHandler = (event) =>{
     event.preventDefault();
     setIsLoading(true);
@@ -62,7 +65,7 @@ function Login() {
         <div className={classes.actions} >
        {!isLoading  && <button>{isLogin? 'Login':'Sign UP'}</button>}
        {isLoading && <p> Sending Request...</p>}
-       {isLogin && <button className={classes.toggle} >Forgot Password</button>}
+       {isLogin && <button className={classes.toggle} onClick={forgotpswdHandler} >Forgot Password?</button>}
         <button className={classes.toggle} onClick={switchLoginHandler}>{isLogin? 'Dont have an account?SignUp' : 'Already have an account?Login'}</button>
       
         </div>
