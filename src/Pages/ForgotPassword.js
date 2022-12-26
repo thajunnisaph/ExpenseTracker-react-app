@@ -31,7 +31,7 @@ const ForgotPassword = () => {
         <form className={classes.form} onSubmit={submitHandler}>
             <p>Enter the email with which you have registered.</p>
             <input type='email' placeholder='Email' ref={emailref} required></input>
-            <button >Send Link</button>
+            <button type='submit'>Send Link</button>
          {isLoading && <p>Loading...</p>}
             <p>Already a user?<span onClick={loginHandler}>Login</span></p>
         </form>

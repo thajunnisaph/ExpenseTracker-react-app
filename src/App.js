@@ -5,6 +5,7 @@ import Login from "./Pages/Login";
 import Home from "./Pages/Home";
 import UpdateProfile from "./Pages/UpdateProfile";
 import ForgotPassword from "./Pages/ForgotPassword";
+import NewExpense from "./Pages/NewExpense";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path='/home'>
           <Home />
         </Route>
+        <Route path='/expenses'><NewExpense /></Route>
         <Route path= '/profile'>
           <UpdateProfile/></Route>
           <Route  path='/forgot'><ForgotPassword /></Route>
