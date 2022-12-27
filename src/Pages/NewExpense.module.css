@@ -1,24 +1,66 @@
-.container{
-    width: 80%;
-    text-align: center;
-    margin: auto;
-    margin-top: 40px;
+.container {
+  width: 80%;
+  text-align: center;
+  margin: auto;
+  margin-top: 40px;
+}
+body {
+  background-color: lightblue;
+}
+.form {
+  align-items: center;
+  display: flex;
+  margin: auto;
+  margin: 15px 10px;
+}
+.form label {
+  display: block;
+  margin-left: 10px;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+.form input,
+select {
+  font: inherit;
+
+  border-radius: 4px;
+  border: 1px solid white;
+  width: 70%;
+  text-align: left;
+  padding: 0.25rem;
+  margin-left: 10px;
+}
+.form button {
+  margin-left: 20px;
+
+  border-radius: 5px;
+
+  color: white;
+  background-color: #9f5ccc;
+  cursor: pointer;
 }
 .expenseitem div {
-    display: flex;
-    margin:  10px 90px ;
-    padding: 10px 50px;
-    width: 33%;
+  margin: 10px 90px;
+  padding: 10px 50px;
+  width: 33%;
+  margin-left: auto;
 
-font-weight: bold;
-text-align: center;
+  font-weight: bold;
+  align-items: flex-end;
 }
 .expenseitem {
-    display: flex;
-    width: 100%;
-
-
+  display: flex;
+  width: 100%;
 }
 li {
-    border-bottom: 1px solid blue;
+  border-bottom: 1px solid blue;
+}
+.action {
+  text-align: right;
+}
+.action button {
+  cursor: pointer;
+  width: 60px;
+  margin-left: 5px;
+  border-radius: 5px;
 }

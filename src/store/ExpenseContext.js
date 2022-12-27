@@ -2,6 +2,8 @@ import React from 'react';
 const ExpenseContext = React.createContext({
 expenses:[],
 addExpense:(expense) =>{},
-getExpense:() =>{}
+getExpense:() =>{},
+deleteExpense:(id) =>{},
+updateExpense:(expense) =>{},
 });
 export default ExpenseContext;
