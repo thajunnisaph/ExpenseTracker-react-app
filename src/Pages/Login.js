@@ -2,6 +2,8 @@ import React,{useState,useRef}from 'react';
 import classes from './Login.module.css';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { authActions } from '../store/authReducer';
 
 function Login() {
    const [isLogin,setIsLogin] =  useState(false);
@@ -10,6 +12,7 @@ function Login() {
    const emailref = useRef();
    const pswdref = useRef();
    const cnfmpswd = useRef();
+   const dispatch = useDispatch();
    const switchLoginHandler = () =>{
     setIsLogin((prevState) => !prevState);
    }
@@ -43,6 +46,7 @@ function Login() {
         if(res.status === 200){
         const token = res.data.idToken;
         localStorage.setItem('token',token);
+        dispatch(authActions.login(token));
         history.push('/home');
         console.log('User has Succesfully Login');
       console.log(res);}

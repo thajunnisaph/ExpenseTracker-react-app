@@ -1,18 +1,40 @@
 import axios from "axios";
 import React from "react";
-import { useEffect, useRef } from "react";
-import { useContext } from "react";
-
-import ExpenseContext from "../store/ExpenseContext";
+import { useEffect, useRef ,useState} from "react";
+import { useDispatch,useSelector } from "react-redux";
+import { expenseActions } from "../store/expenseReducer";
 import classes from "./NewExpense.module.css";
 const NewExpense = () => {
-  const expensectx = useContext(ExpenseContext);
+  const [isEdit,setIsEdit] = useState(false)
+ const dispatch = useDispatch();
+ const expenses = useSelector((state) => state.expense.expenses);
+ let totalexpense = 0;
+ expenses.forEach((expense) => {
+ totalexpense=Number(totalexpense)+Number(expense.amount);
+ });
+
   const amountref = useRef();
   const descriptref = useRef();
   const cateref = useRef();
-
+  async function fetchingdata(){
+    const res = await axios.get(
+      "https://expensetracker-a270d-default-rtdb.firebaseio.com/expenses.json"
+    );
+    const data = await res.data;
+    console.log(data);
+    const temp = [];
+    for (const Key in data) {
+      temp.push({
+        id: Key,
+        amount: data[Key].amount,
+        description: data[Key].description,
+        category: data[Key].category,
+      });
+    }
+dispatch(expenseActions.getExpense(temp))
+  }
   useEffect(() => {
-    expensectx.getExpense();
+   fetchingdata(); 
   }, []);
 
   const addExpenseHandler = (e) => {
@@ -34,7 +56,7 @@ const NewExpense = () => {
           description: descriptref.current.value,
           category: cateref.current.value,
         };
-        expensectx.addExpense(expense);
+        dispatch(expenseActions.addExpense(expense));
 
         amountref.current.value = "";
         descriptref.current.value = "";
@@ -45,14 +67,17 @@ const NewExpense = () => {
       });
   };
   const deleteHandler = (id) => {
-    expensectx.deleteExpense(id);
+    axios.delete(`https://expensetracker-a270d-default-rtdb.firebaseio.com/expenses/${id}.json` );
+    dispatch(expenseActions.deleteExpense(id));
   };
   const editHandler = (exp) => {
+    setIsEdit(true);
     amountref.current.value = exp.amount;
     descriptref.current.value = exp.description;
     cateref.current.value = exp.category;
   };
   const updateHandler = async (exp) => {
+    setIsEdit(false)
     await axios.put(
       `https://expensetracker-a270d-default-rtdb.firebaseio.com/expenses/${exp.id}.json`,
       {
@@ -67,7 +92,7 @@ const NewExpense = () => {
       description: descriptref.current.value,
       category: cateref.current.value,
     };
-    expensectx.updateExpense(data);
+    dispatch(expenseActions.updateExpense(data));
     amountref.current.value = "";
     descriptref.current.value = "";
     cateref.current.value = "";
@@ -75,6 +100,7 @@ const NewExpense = () => {
 
   return (
     <div className={classes.container}>
+      {totalexpense>10000 &&(<div className={classes.premium}><button>Activate Premium!</button></div>)} 
       <h1>Daily Expenses</h1>
       <form className={classes.form} onSubmit={addExpenseHandler}>
         <label htmlFor="amount">Money Spent</label>
@@ -91,10 +117,10 @@ const NewExpense = () => {
           <option value="petrol">Petrol</option>
           <option value="salary">Salary</option>
         </select>
-        <button type="submit">Add Expense</button>
+     {!isEdit &&  <button type="submit">Add Expense</button>}
       </form>
       <ul className={classes.expenselist}>
-        {expensectx.expenses.map((exp) => {
+        {expenses.map((exp) => {
           return (
             <li key={exp.id} className={classes.expenseitem}>
               <div> ${exp.amount}</div>
@@ -103,12 +129,13 @@ const NewExpense = () => {
               <div className={classes.action}>
                 <button onClick={() => deleteHandler(exp.id)}>Delete</button>
                 <button onClick={() => editHandler(exp)}>Edit</button>
-                <button onClick={() => updateHandler(exp)}>Update</button>
+            { isEdit &&  <button onClick={() => updateHandler(exp)}>Update</button>}
               </div>
             </li>
           );
         })}
       </ul>
+      <div className={classes.total}>Total Expense: ${totalexpense}</div>
     </div>
   );
 };
