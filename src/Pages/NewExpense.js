@@ -1,22 +1,30 @@
 import axios from "axios";
 import React from "react";
-import { useEffect, useRef ,useState} from "react";
-import { useDispatch,useSelector } from "react-redux";
+import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { expenseActions } from "../store/expenseReducer";
+import { themeActions } from "../store/themeReducer";
 import classes from "./NewExpense.module.css";
 const NewExpense = () => {
-  const [isEdit,setIsEdit] = useState(false)
- const dispatch = useDispatch();
- const expenses = useSelector((state) => state.expense.expenses);
- let totalexpense = 0;
- expenses.forEach((expense) => {
- totalexpense=Number(totalexpense)+Number(expense.amount);
- });
+  const [isEdit, setIsEdit] = useState(false);
+  const [ispremium, setIsPremium] = useState(false);
+  const dispatch = useDispatch();
+  const expenses = useSelector((state) => state.expense.expenses);
+  const theme = useSelector((state) => state.theme.isTheme);
+  if (theme) {
+    document.body.style.background = "rgb(44, 39, 39)";
+  } else {
+    document.body.style.background = " lightblue";
+  }
+  let totalexpense = 0;
+  expenses.forEach((expense) => {
+    totalexpense = Number(totalexpense) + Number(expense.amount);
+  });
 
   const amountref = useRef();
   const descriptref = useRef();
   const cateref = useRef();
-  async function fetchingdata(){
+  async function fetchingdata() {
     const res = await axios.get(
       "https://expensetracker-a270d-default-rtdb.firebaseio.com/expenses.json"
     );
@@ -31,10 +39,10 @@ const NewExpense = () => {
         category: data[Key].category,
       });
     }
-dispatch(expenseActions.getExpense(temp))
+    dispatch(expenseActions.getExpense(temp));
   }
   useEffect(() => {
-   fetchingdata(); 
+    fetchingdata();
   }, []);
 
   const addExpenseHandler = (e) => {
@@ -67,7 +75,9 @@ dispatch(expenseActions.getExpense(temp))
       });
   };
   const deleteHandler = (id) => {
-    axios.delete(`https://expensetracker-a270d-default-rtdb.firebaseio.com/expenses/${id}.json` );
+    axios.delete(
+      `https://expensetracker-a270d-default-rtdb.firebaseio.com/expenses/${id}.json`
+    );
     dispatch(expenseActions.deleteExpense(id));
   };
   const editHandler = (exp) => {
@@ -77,7 +87,7 @@ dispatch(expenseActions.getExpense(temp))
     cateref.current.value = exp.category;
   };
   const updateHandler = async (exp) => {
-    setIsEdit(false)
+    setIsEdit(false);
     await axios.put(
       `https://expensetracker-a270d-default-rtdb.firebaseio.com/expenses/${exp.id}.json`,
       {
@@ -97,10 +107,42 @@ dispatch(expenseActions.getExpense(temp))
     descriptref.current.value = "";
     cateref.current.value = "";
   };
-
+  const activatePremiumHandler = () => {
+    setIsPremium(true);
+    dispatch(themeActions.toggle());
+  };
+  const toggleHandler = () => {
+    dispatch(themeActions.toggle());
+  };
+  function makeCSV(expenses) {
+    if (expenses.length > 0) {
+      const headers = Object.keys(expenses[0]).toString();
+      const main = expenses.map((exp) => {
+        return Object.values(exp).toString();
+      });
+      const csv = [headers, ...main].join("\n");
+      return csv;
+    }
+  }
+  const blob = new Blob([makeCSV(expenses)]);
+  const url = URL.createObjectURL(blob);
   return (
     <div className={classes.container}>
-      {totalexpense>10000 &&(<div className={classes.premium}><button>Activate Premium!</button></div>)} 
+      {totalexpense > 10000 && (
+        <div className={classes.premium}>
+          <button onClick={activatePremiumHandler}>Activate Premium!</button>
+          {ispremium && (
+            <>
+              <button onClick={toggleHandler}>
+                {theme ? "Switch To Light " : "Switch To Dark"}
+              </button>
+              <a download="expense.csv" href={url}>
+                Download
+              </a>
+            </>
+          )}
+        </div>
+      )}
       <h1>Daily Expenses</h1>
       <form className={classes.form} onSubmit={addExpenseHandler}>
         <label htmlFor="amount">Money Spent</label>
@@ -117,7 +159,7 @@ dispatch(expenseActions.getExpense(temp))
           <option value="petrol">Petrol</option>
           <option value="salary">Salary</option>
         </select>
-     {!isEdit &&  <button type="submit">Add Expense</button>}
+        {!isEdit && <button type="submit">Add Expense</button>}
       </form>
       <ul className={classes.expenselist}>
         {expenses.map((exp) => {
@@ -129,7 +171,9 @@ dispatch(expenseActions.getExpense(temp))
               <div className={classes.action}>
                 <button onClick={() => deleteHandler(exp.id)}>Delete</button>
                 <button onClick={() => editHandler(exp)}>Edit</button>
-            { isEdit &&  <button onClick={() => updateHandler(exp)}>Update</button>}
+                {isEdit && (
+                  <button onClick={() => updateHandler(exp)}>Update</button>
+                )}
               </div>
             </li>
           );

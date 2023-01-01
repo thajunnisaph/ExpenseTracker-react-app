@@ -73,7 +73,13 @@ li {
 }
 
 .premium button{
+  color: white;
+  margin-left: 25px;
+  cursor: pointer;
   border-radius: 5px;
   background-color:#9f5ccc;
   height: 30px;
+}
+.premium a{
+  margin-left: 25px;
 }

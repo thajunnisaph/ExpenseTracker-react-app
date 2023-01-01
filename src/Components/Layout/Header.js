@@ -21,9 +21,9 @@ function Header() {
   return (
     <div className={classes.header}>
         <h1>Expense Tracker</h1>
-     {isLogin &&<h3 onClick={goToExpenseHandler}>My Expenses</h3>}
+     <h3 onClick={goToExpenseHandler}>My Expenses</h3>
         <div className={classes.logout}>
-{isLogin && <button onClick={logoutHandler}>Logout</button>}</div>
+ <button onClick={logoutHandler}>Logout</button></div>
     </div>
   )
 }
