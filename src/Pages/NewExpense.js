@@ -10,9 +10,10 @@ const NewExpense = () => {
   const [ispremium, setIsPremium] = useState(false);
   const dispatch = useDispatch();
   const expenses = useSelector((state) => state.expense.expenses);
+  const email = useSelector((state) => state.auth.email)
   const theme = useSelector((state) => state.theme.isTheme);
   if (theme) {
-    document.body.style.background = "rgb(44, 39, 39)";
+    document.body.style.background = "darkgreen";
   } else {
     document.body.style.background = " lightblue";
   }
@@ -26,7 +27,7 @@ const NewExpense = () => {
   const cateref = useRef();
   async function fetchingdata() {
     const res = await axios.get(
-      "https://expensetracker-a270d-default-rtdb.firebaseio.com/expenses.json"
+      `https://expensetracker-a270d-default-rtdb.firebaseio.com/expenses${email}.json`
     );
     const data = await res.data;
     console.log(data);
@@ -49,7 +50,7 @@ const NewExpense = () => {
     e.preventDefault();
     axios
       .post(
-        "https://expensetracker-a270d-default-rtdb.firebaseio.com/expenses.json",
+        `https://expensetracker-a270d-default-rtdb.firebaseio.com/expenses${email}.json`,
         {
           amount: amountref.current.value,
           description: descriptref.current.value,
@@ -76,7 +77,7 @@ const NewExpense = () => {
   };
   const deleteHandler = (id) => {
     axios.delete(
-      `https://expensetracker-a270d-default-rtdb.firebaseio.com/expenses/${id}.json`
+      `https://expensetracker-a270d-default-rtdb.firebaseio.com/expenses${email}/${id}.json`
     );
     dispatch(expenseActions.deleteExpense(id));
   };
@@ -89,7 +90,7 @@ const NewExpense = () => {
   const updateHandler = async (exp) => {
     setIsEdit(false);
     await axios.put(
-      `https://expensetracker-a270d-default-rtdb.firebaseio.com/expenses/${exp.id}.json`,
+      `https://expensetracker-a270d-default-rtdb.firebaseio.com/expenses${email}/${exp.id}.json`,
       {
         amount: amountref.current.value,
         description: descriptref.current.value,

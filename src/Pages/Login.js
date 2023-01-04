@@ -42,11 +42,13 @@ function Login() {
         password:enteredpswd,
         returnSecureToken:true
     }).then((res) =>{
-        setIsLoading(false);
+      const email = enteredemail.replace(/\.|@/g, '');
+         setIsLoading(false);
         if(res.status === 200){
         const token = res.data.idToken;
         localStorage.setItem('token',token);
-        dispatch(authActions.login(token));
+        localStorage.setItem('email',email);
+        dispatch(authActions.login({token:token,email:email}));
         history.push('/home');
         console.log('User has Succesfully Login');
       console.log(res);}
